@@ -20,7 +20,6 @@ namespace DS
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void display(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
