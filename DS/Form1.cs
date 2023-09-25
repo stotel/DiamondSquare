@@ -16,7 +16,11 @@ namespace DS
     {
         public int iterationNumber = 0;
         public Random random = new Random(0);
-        public List<int[]> cubes = new List<int[]>();
+        private int height = 100;
+        public List<List<int[]>> cubes = new List<List<int[]>>();
+        private float roughness = 1.5f;
+        private int dimension = 512;
+
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +33,10 @@ namespace DS
             {
                 Color = new SKColor((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255))
             }) ;
+        }
+        private void subdivide(List<List<int[]>> field)
+        {
+
         }
 
         private void Do1Iteration_Click(object sender, EventArgs e)
