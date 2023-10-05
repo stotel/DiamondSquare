@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,14 @@ namespace DS
 {
     public partial class Form1 : Form
     {
+        private static int dimension = 1025;
         public int iterationNumber = 0;
-        public Random random = new Random(0);
-        private int height = 100;
-        public List<List<int[]>> cubes = new List<List<int[]>>();
+        public static  Random random = new Random(0);
+        private List<List<Node>> nodes = new List<List<Node>>() { 
+            new List<Node>() { new Node(0, 0, (float)random.NextDouble()), new Node(dimension, 0, (float)random.NextDouble()) },
+            new List<Node>() { new Node(0, dimension, (float)random.NextDouble()), new Node(dimension, dimension, (float)random.NextDouble()) } 
+        };//Initial 4 points
         private float roughness = 1.5f;
-        private int dimension = 512;
 
         public Form1()
         {
@@ -34,7 +37,14 @@ namespace DS
                 Color = new SKColor((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255))
             }) ;
         }
-        private void subdivide(List<List<int[]>> field)
+        private void startingConditions(List<List<Node>> nodes)
+        {
+            nodes.Add(new List<Node>());
+            nodes.Add(new List<Node>());//new Node(0, 0, (float)random.NextDouble()), new Node(dimension, 0, (float)random.NextDouble())
+            nodes[0].Add(new Node(0, 0, (float)random.NextDouble()));
+            nodes[0].Add(new Node(0, 0, (float)random.NextDouble()));
+        }
+        private void subdivide(List<List<Node>> field)
         {
 
         }
