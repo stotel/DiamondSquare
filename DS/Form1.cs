@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
@@ -23,9 +24,9 @@ namespace DS
     public partial class Form1 : Form
     {
         private static int DIMENSION = 1024;
-        private float ROUGHNESS = 1.5f;
+        private float ROUGHNESS = 0.5f;
         public int iterationNumber = 0;
-        public static Random random = new Random(132);
+        public static Random random = new Random();
         /*private List<List<Node>> nodes = new List<List<Node>>() { 
             new List<Node>() { new Node(0, 0, (float)random.NextDouble()), new Node(dimension, 0, (float)random.NextDouble()) },
             new List<Node>() { new Node(0, dimension, (float)random.NextDouble()), new Node(dimension, dimension, (float)random.NextDouble()) } 
@@ -40,11 +41,6 @@ namespace DS
         private void display(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            /*
-            e.Surface.Canvas.DrawRect(0, 0, 100, 100, new SKPaint
-            {
-                Color = new SKColor((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255))
-            });*/
             e.Surface.Canvas.DrawRect(DIMENSION, 0, 3, DIMENSION, new SKPaint
             {
                 Color = new SKColor(255, 0, 0)
@@ -56,7 +52,7 @@ namespace DS
             int segmentLen = DIMENSION / midpointLine.Count;
             List<Node> midpoints = new List<Node>();
             Node midpoint;
-            for (int i = 0; i < midpointLine.Count-1; i+=2)
+            for (int i = 0; i < midpointLine.Count-1; i++)
             {
                 midpoint = new Node(
                     (midpointLine[i].x + midpointLine[i+1].x) / 2,//new x
@@ -64,12 +60,12 @@ namespace DS
                     (float)((midpointLine[i].height + midpointLine[i + 1].height) / 2 + ROUGHNESS * segmentLen * (random.NextDouble() - 0.5)));//new z
                 midpoints.Add(midpoint);
             }
-            List<Node> oldMidpoints = midpointLine;
+            Debug.WriteLine(midpoints.Count);
             for (int i = 0; i<midpoints.Count;i++)
             {
                 midpointLine.Insert(2*i+1,midpoints[i]);
             }
-            int segmentDrawingLen = DIMENSION / midpointLine.Count;
+            int segmentDrawingLen = (DIMENSION / midpointLine.Count)+1;
             byte color;
             for (int i = 0;i < midpointLine.Count; i++)
             {
