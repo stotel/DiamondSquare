@@ -14,9 +14,16 @@ namespace DS
     }
     public class Node
     {
-        public Node(float x, float y, float height)
+        public float x;
+        public float y;
+        public float height;
+        public Node(float _x, float _y, float _height)
         {
+            x = _x;
+            y = _y;
+            height = _height;
         }
+    
     }
     public class NuclearSquare
     {
