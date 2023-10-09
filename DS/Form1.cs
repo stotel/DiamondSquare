@@ -26,7 +26,7 @@ namespace DS
         private static int DIMENSION = 1024;
         private static int worldsize_param =10;
         private static int WORLDSIZE = (int)Math.Pow(2,worldsize_param);
-        private float ROUGHNESS = 0.5f;
+        private float ROUGHNESS = 1.5f;
         public int iterationNumber = 0;
         public static Random random = new Random();
         public Node[,] World;
@@ -38,13 +38,9 @@ namespace DS
 
         private void display(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
         {
-            //e.Surface.Canvas.Clear();
-            //e.Surface.Canvas.DrawRect(DIMENSION, 0, 3, DIMENSION, new SKPaint
-            //{
-            //    Color = new SKColor(255, 0, 0)
-            //});
             InitWorld();
             generateLandscape(sender,e);
+            visualiseWorld(sender,e);
             //subdivide(sender,e);
         }
         //Sets up the initial 4 points for the world corners
@@ -59,71 +55,82 @@ namespace DS
         //the main function
         private void generateLandscape(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
         {
+            //i equals depth
             for (int i = 1; i <= worldsize_param; i++)
-            {
+            {   
+                //get the middles
                 int step = WORLDSIZE;
                 step = step / (int)Math.Pow(2, i);
                 int numberOfSteps = WORLDSIZE/ step;
-                byte color = (byte)(random.NextDouble() * 255);
+                byte color = (byte)(200*i/worldsize_param);
                 for (int y = 0; y < numberOfSteps+1; y++)
                 {
                     for (int x = 0; x < numberOfSteps+1; x++) 
                     {   
                         if ((x+y)%2 != 0)
                         {
-                            //e.Surface.Canvas.DrawRect(x*step, y*step,5,5, new SKPaint { Color = new SKColor(color, color, color) });
-                            e.Surface.Canvas.DrawPoint 
-                                (new SKPoint(x*step,y*step),
-                                new SKColor(color, 0, 0));
+                            if (y%2 == 0)
+                                World[x*step, y*step] = new Node
+                                    (
+                                    x * step,
+                                    y * step,
+                                    (float)(((World[(x-1) * step, y * step].height+ World[(x + 1) * step, y * step].height)
+                                    /2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                                    );
+                            else
+                            {
+                                World[x * step, y * step] = new Node
+                                    (
+                                    x * step,
+                                    y * step,
+                                    (float)(((World[x * step, (y-1) * step].height + World[x * step, (y+1) * step].height)
+                                    / 2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                                    );
+                            }
                         }
                     }
                 }
-                for (int y = 0; y < numberOfSteps + 1; y++)
+                //get the centr
+                for (int y = 1; y < numberOfSteps; y+=2)
                 {
-                    for (int x = 0; x < numberOfSteps + 1; x++)
+                    for (int x = 1; x < numberOfSteps; x+=2)
                     {
-                        if ((x + y) % 2 == 0)
-                        {
-                            //e.Surface.Canvas.DrawRect(x*step, y*step,5,5, new SKPaint { Color = new SKColor(color, color, color) });
-                            e.Surface.Canvas.DrawPoint
-                                (new SKPoint(x * step, y * step),
-                                new SKColor(0, color, 0));
-                        }
+                        World[x * step, y * step] = new Node
+                            (x * step,
+                            y * step,
+                            (float)(((World[x * step, (y - 1) * step].height + World[x * step, (y + 1) * step].height +
+                            World[(x - 1) * step, y * step].height + World[(x + 1) * step, y * step].height)
+                            / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(),2) - 0.5))
+                            );
                     }
                 }
 
             }
         }
-        //Step 1 : generate wall middles
-        /*private void subdivide(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
+        private void visualiseWorld(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
         {
-            int segmentLen = DIMENSION / midpointLine.Count;
-            List<Node> midpoints = new List<Node>();
-            Node midpoint;
-            for (int i = 0; i < midpointLine.Count-1; i++)
+            byte color = (byte)(0);
+            for (int y = 1;y < WORLDSIZE;y++)
             {
-                midpoint = new Node(
-                    (midpointLine[i].x + midpointLine[i+1].x) / 2,//new x
-                    0,//new y
-                    (float)((midpointLine[i].height + midpointLine[i + 1].height) / 2 + ROUGHNESS * segmentLen * (random.NextDouble() - 0.5)));//new z
-                midpoints.Add(midpoint);
+                for (int x = 1; x < WORLDSIZE; x++)
+                {   
+                    if(World[y, x].height < 202)
+                    {
+                        color = (byte)(100);
+                        e.Surface.Canvas.DrawPoint
+                        (new SKPoint(x, y),
+                        new SKColor(0, 0, color));
+                    }
+                    else
+                    {
+                        color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0));
+                        e.Surface.Canvas.DrawPoint
+                        (new SKPoint(x, y),
+                        new SKColor(color, color, color));
+                    }
+                }
             }
-            for (int i = 0; i<midpoints.Count;i++)
-            {
-                midpointLine.Insert(2*i+1,midpoints[i]);
-            }
-            Debug.WriteLine(midpointLine.Count);
-            int segmentDrawingLen = (DIMENSION / midpointLine.Count)+1;
-            byte color;
-            for (int i = 0;i < midpointLine.Count; i++)
-            {
-                color = (byte)(midpointLine[i].height * 255 / DIMENSION);
-                e.Surface.Canvas.DrawRect(i * segmentDrawingLen, DIMENSION - midpointLine[i].height, segmentDrawingLen, midpointLine[i].height, new SKPaint
-                {
-                    Color = new SKColor(color, color, color)
-                });
-            }
-        }*/
+        }
     private void Do1Iteration_Click(object sender, EventArgs e)
         {
             skglControl1.Invalidate();
