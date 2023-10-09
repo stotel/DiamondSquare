@@ -27,11 +27,7 @@ namespace DS
         private float ROUGHNESS = 0.5f;
         public int iterationNumber = 0;
         public static Random random = new Random();
-        /*private List<List<Node>> nodes = new List<List<Node>>() { 
-            new List<Node>() { new Node(0, 0, (float)random.NextDouble()), new Node(dimension, 0, (float)random.NextDouble()) },
-            new List<Node>() { new Node(0, dimension, (float)random.NextDouble()), new Node(dimension, dimension, (float)random.NextDouble()) } 
-        };//Initial 4 points
-        */
+        public Node[524289][524289];
         public List<Node> midpointLine = new List<Node>() { new Node(0, 0, 512.0f), new Node(DIMENSION, 0, 512.0f) };
         public Form1()
         {
@@ -60,11 +56,12 @@ namespace DS
                     (float)((midpointLine[i].height + midpointLine[i + 1].height) / 2 + ROUGHNESS * segmentLen * (random.NextDouble() - 0.5)));//new z
                 midpoints.Add(midpoint);
             }
-            Debug.WriteLine(midpoints.Count);
+            //Debug.WriteLine(midpoints.Count);
             for (int i = 0; i<midpoints.Count;i++)
             {
                 midpointLine.Insert(2*i+1,midpoints[i]);
             }
+            Debug.WriteLine(midpointLine.Count);
             int segmentDrawingLen = (DIMENSION / midpointLine.Count)+1;
             byte color;
             for (int i = 0;i < midpointLine.Count; i++)
