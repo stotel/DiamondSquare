@@ -1,7 +1,7 @@
 ﻿//Rublevsky O O
 /*
  *Eventually this will become a compleate Dimond-Square algoruthm implementation
- *but this version is only implementing midpoint generation , now in 2d
+ *And thats it! im going to do it rn
 */
 
 using OpenTK.Graphics.ES20;
@@ -90,21 +90,24 @@ namespace DS
                         }
                     }
                 }
-                //get the centr
-                for (int y = 1; y < numberOfSteps; y+=2)
+                loopThroughCenters(numberOfSteps, step);
+            }
+        }
+        //generate centrs
+        private void loopThroughCenters(int numberOfSteps,int step)
+        {
+            for (int y = 1; y < numberOfSteps; y += 2)
+            {
+                for (int x = 1; x < numberOfSteps; x += 2)
                 {
-                    for (int x = 1; x < numberOfSteps; x+=2)
-                    {
-                        World[x * step, y * step] = new Node
-                            (x * step,
-                            y * step,
-                            (float)(((World[x * step, (y - 1) * step].height + World[x * step, (y + 1) * step].height +
-                            World[(x - 1) * step, y * step].height + World[(x + 1) * step, y * step].height)
-                            / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(),2) - 0.5))
-                            );
-                    }
+                    World[x * step, y * step] = new Node
+                        (x * step,
+                        y * step,
+                        (float)(((World[x * step, (y - 1) * step].height + World[x * step, (y + 1) * step].height +
+                        World[(x - 1) * step, y * step].height + World[(x + 1) * step, y * step].height)
+                        / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                        );
                 }
-
             }
         }
         private void visualiseWorld(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
