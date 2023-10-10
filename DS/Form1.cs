@@ -41,7 +41,6 @@ namespace DS
             InitWorld();
             generateLandscape(sender,e);
             visualiseWorld(sender,e);
-            //subdivide(sender,e);
         }
         //Sets up the initial 4 points for the world corners
         private void InitWorld()
@@ -63,34 +62,38 @@ namespace DS
                 step = step / (int)Math.Pow(2, i);
                 int numberOfSteps = WORLDSIZE/ step;
                 byte color = (byte)(200*i/worldsize_param);
-                for (int y = 0; y < numberOfSteps+1; y++)
+                loopThroughMiddles(numberOfSteps, step);
+                loopThroughCenters(numberOfSteps, step);
+            }
+        }
+        private void loopThroughMiddles(int numberOfSteps, int step)
+        {
+            for (int y = 0; y < numberOfSteps + 1; y++)
+            {
+                for (int x = 0; x < numberOfSteps + 1; x++)
                 {
-                    for (int x = 0; x < numberOfSteps+1; x++) 
-                    {   
-                        if ((x+y)%2 != 0)
+                    if ((x + y) % 2 != 0)
+                    {
+                        if (y % 2 == 0)
+                            World[x * step, y * step] = new Node
+                                (
+                                x * step,
+                                y * step,
+                                (float)(((World[(x - 1) * step, y * step].height + World[(x + 1) * step, y * step].height)
+                                / 2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                                );
+                        else
                         {
-                            if (y%2 == 0)
-                                World[x*step, y*step] = new Node
-                                    (
-                                    x * step,
-                                    y * step,
-                                    (float)(((World[(x-1) * step, y * step].height+ World[(x + 1) * step, y * step].height)
-                                    /2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
-                                    );
-                            else
-                            {
-                                World[x * step, y * step] = new Node
-                                    (
-                                    x * step,
-                                    y * step,
-                                    (float)(((World[x * step, (y-1) * step].height + World[x * step, (y+1) * step].height)
-                                    / 2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
-                                    );
-                            }
+                            World[x * step, y * step] = new Node
+                                (
+                                x * step,
+                                y * step,
+                                (float)(((World[x * step, (y - 1) * step].height + World[x * step, (y + 1) * step].height)
+                                / 2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                                );
                         }
                     }
                 }
-                loopThroughCenters(numberOfSteps, step);
             }
         }
         //generate centrs
