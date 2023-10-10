@@ -116,7 +116,7 @@ namespace DS
                 {   
                     if(World[y, x].height < 202)
                     {
-                        color = (byte)(100);
+                        color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0)+100); ;
                         e.Surface.Canvas.DrawPoint
                         (new SKPoint(x, y),
                         new SKColor(0, 0, color));
