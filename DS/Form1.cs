@@ -25,8 +25,8 @@ namespace DS
     public partial class Form1 : Form
     {
         private static int DIMENSION = 1024;
-        private static int worldsize_param =10;
-        private static int WORLDSIZE = (int)Math.Pow(2,worldsize_param);
+        private static int worldsize_param = 10;
+        private static int WORLDSIZE = (int)Math.Pow(2, worldsize_param);
         private float ROUGHNESS = 1.5f;
         public int iterationNumber = 0;
         public static Random random = new Random();
@@ -40,13 +40,13 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             InitWorld();
-            generateLandscape(sender,e);
-            visualiseWorld(sender,e);
+            generateLandscape(sender, e);
+            visualiseWorld(sender, e);
         }
         //Sets up the initial 4 points for the world corners
         private void InitWorld()
         {
-            World = new Node[WORLDSIZE+1, WORLDSIZE+1];
+            World = new Node[WORLDSIZE + 1, WORLDSIZE + 1];
             World[0, 0] = new Node(0, 0, 512.0f);
             World[0, WORLDSIZE] = new Node(0, WORLDSIZE, 512.0f);
             World[WORLDSIZE, 0] = new Node(WORLDSIZE, 0, 512.0f);
@@ -57,12 +57,12 @@ namespace DS
         {
             //i equals depth
             for (int i = 1; i <= worldsize_param; i++)
-            {   
+            {
                 //get the middles
                 int step = WORLDSIZE;
                 step = step / (int)Math.Pow(2, i);
-                int numberOfSteps = WORLDSIZE/ step;
-                byte color = (byte)(200*i/worldsize_param);
+                int numberOfSteps = WORLDSIZE / step;
+                byte color = (byte)(200 * i / worldsize_param);
                 loopThroughCenters(numberOfSteps, step);
                 loopThroughMiddles(numberOfSteps, step);
             }
@@ -78,11 +78,15 @@ namespace DS
                 {
                     if ((x + y) % 2 != 0)
                     {
+                        float Point1Z = World[boundInt(x - 1, numberOfSteps) * step, (y) * step].height;
+                        float Point2Z = World[boundInt(x + 1, numberOfSteps) * step, (y) * step].height;
+                        float Point3Z = World[(x) * step, boundInt(y + 1, numberOfSteps) * step].height;
+                        float Point4Z = World[(x) * step, boundInt(y - 1, numberOfSteps) * step].height;
                         World[x * step, y * step] = new Node
                         (x * step,
                         y * step,
-                        (float)(((World[boundInt(x - 1, numberOfSteps) * step, (y) * step].height + World[boundInt(x + 1, numberOfSteps) * step, (y) * step].height +
-                        World[(x) * step, boundInt(y + 1, numberOfSteps) * step].height + World[(x) * step, boundInt(y - 1, numberOfSteps) * step].height)
+                        (float)(((Point1Z + Point2Z +
+                        Point3Z + Point4Z)
                         / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
                         );
                     }
@@ -92,20 +96,20 @@ namespace DS
             {
                 if (x < 0)
                 {
-                    return numberOfSteps_-1 + x;
+                    return numberOfSteps_ + x;
                 }
-                else if (x > numberOfSteps_-1)
+                else if (x > numberOfSteps_ - 1)
                 {
-                    return x - numberOfSteps_-1;
+                    return x - numberOfSteps_;
                 }
-                else 
-                { 
+                else
+                {
                     return x;
                 }
             }
         }
         //generate centrs
-        private void loopThroughCenters(int numberOfSteps,int step)
+        private void loopThroughCenters(int numberOfSteps, int step)
         {
             for (int y = 1; y < numberOfSteps; y += 2)
             {
@@ -114,8 +118,8 @@ namespace DS
                     World[x * step, y * step] = new Node
                         (x * step,
                         y * step,
-                        (float)(((World[(x-1) * step, (y - 1) * step].height + World[(x+1) * step, (y + 1) * step].height +
-                        World[(x - 1) * step, (y+1) * step].height + World[(x + 1) * step, (y-1) * step].height)
+                        (float)(((World[(x - 1) * step, (y - 1) * step].height + World[(x + 1) * step, (y + 1) * step].height +
+                        World[(x - 1) * step, (y + 1) * step].height + World[(x + 1) * step, (y - 1) * step].height)
                         / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
                         );
                 }
@@ -124,13 +128,13 @@ namespace DS
         private void visualiseWorld(object sender, SKPaintGLSurfaceEventArgs e)
         {
             byte color = (byte)(0);
-            for (int y = 1;y < WORLDSIZE;y++)
+            for (int y = 1; y < WORLDSIZE; y++)
             {
                 for (int x = 1; x < WORLDSIZE; x++)
-                {   
-                    if(World[y, x].height < 202)
+                {
+                    if (World[y, x].height < 202)
                     {
-                        color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0)+100); ;
+                        color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0) + 100); ;
                         e.Surface.Canvas.DrawPoint
                         (new SKPoint(x, y),
                         new SKColor(0, 0, color));
@@ -145,7 +149,7 @@ namespace DS
                 }
             }
         }
-    private void Do1Iteration_Click(object sender, EventArgs e)
+        private void Do1Iteration_Click(object sender, EventArgs e)
         {
             skglControl1.Invalidate();
         }
