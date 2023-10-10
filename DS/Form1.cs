@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SkiaSharp.Views.Desktop;
 
 namespace DS
 {
@@ -36,7 +37,7 @@ namespace DS
             InitializeComponent();
         }
 
-        private void display(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
+        private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             InitWorld();
             generateLandscape(sender,e);
@@ -52,7 +53,7 @@ namespace DS
             World[WORLDSIZE, WORLDSIZE] = new Node(WORLDSIZE, WORLDSIZE, 512.0f);
         }
         //the main function
-        private void generateLandscape(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
+        private void generateLandscape(object sender, SKPaintGLSurfaceEventArgs e)
         {
             //i equals depth
             for (int i = 1; i <= worldsize_param; i++)
@@ -62,37 +63,44 @@ namespace DS
                 step = step / (int)Math.Pow(2, i);
                 int numberOfSteps = WORLDSIZE/ step;
                 byte color = (byte)(200*i/worldsize_param);
-                loopThroughMiddles(numberOfSteps, step);
                 loopThroughCenters(numberOfSteps, step);
+                loopThroughMiddles(numberOfSteps, step);
             }
         }
         private void loopThroughMiddles(int numberOfSteps, int step)
         {
+            //Debug.WriteLine(boundInt(-1, numberOfSteps));
+            //Debug.WriteLine(boundInt(5, numberOfSteps));
+            //Debug.WriteLine(boundInt(1, numberOfSteps));
             for (int y = 0; y < numberOfSteps + 1; y++)
             {
                 for (int x = 0; x < numberOfSteps + 1; x++)
                 {
                     if ((x + y) % 2 != 0)
                     {
-                        if (y % 2 == 0)
-                            World[x * step, y * step] = new Node
-                                (
-                                x * step,
-                                y * step,
-                                (float)(((World[(x - 1) * step, y * step].height + World[(x + 1) * step, y * step].height)
-                                / 2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
-                                );
-                        else
-                        {
-                            World[x * step, y * step] = new Node
-                                (
-                                x * step,
-                                y * step,
-                                (float)(((World[x * step, (y - 1) * step].height + World[x * step, (y + 1) * step].height)
-                                / 2) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
-                                );
-                        }
+                        World[x * step, y * step] = new Node
+                        (x * step,
+                        y * step,
+                        (float)(((World[boundInt(x - 1, numberOfSteps) * step, (y) * step].height + World[boundInt(x + 1, numberOfSteps) * step, (y) * step].height +
+                        World[(x) * step, boundInt(y + 1, numberOfSteps) * step].height + World[(x) * step, boundInt(y - 1, numberOfSteps) * step].height)
+                        / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                        );
                     }
+                }
+            }
+            int boundInt(int x, int numberOfSteps_)
+            {
+                if (x < 0)
+                {
+                    return numberOfSteps_-1 + x;
+                }
+                else if (x > numberOfSteps_-1)
+                {
+                    return x - numberOfSteps_-1;
+                }
+                else 
+                { 
+                    return x;
                 }
             }
         }
@@ -106,14 +114,14 @@ namespace DS
                     World[x * step, y * step] = new Node
                         (x * step,
                         y * step,
-                        (float)(((World[x * step, (y - 1) * step].height + World[x * step, (y + 1) * step].height +
-                        World[(x - 1) * step, y * step].height + World[(x + 1) * step, y * step].height)
+                        (float)(((World[(x-1) * step, (y - 1) * step].height + World[(x+1) * step, (y + 1) * step].height +
+                        World[(x - 1) * step, (y+1) * step].height + World[(x + 1) * step, (y-1) * step].height)
                         / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
                         );
                 }
             }
         }
-        private void visualiseWorld(object sender, SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs e)
+        private void visualiseWorld(object sender, SKPaintGLSurfaceEventArgs e)
         {
             byte color = (byte)(0);
             for (int y = 1;y < WORLDSIZE;y++)
