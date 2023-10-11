@@ -25,9 +25,9 @@ namespace DS
     public partial class Form1 : Form
     {
         private static int DIMENSION = 1024;
-        private static int worldsize_param = 10;
-        private static int WORLDSIZE = (int)Math.Pow(2, worldsize_param);
-        private float ROUGHNESS = 1.5f;
+        private static int worldsiseParam = 9;
+        private static int WORLDSIZE = (int)Math.Pow(2, worldsiseParam);
+        private float ROUGHNESS = 5f;
         public int iterationNumber = 0;
         public static Random random = new Random();
         public Node[,] World;
@@ -41,7 +41,15 @@ namespace DS
         {
             InitWorld();
             generateLandscape(sender, e);
-            visualiseWorld(sender, e);
+            int numOfSquares = (int)Math.Pow(2, (10 - worldsiseParam));
+            for (int x = 0; x < numOfSquares; x++)
+            {
+                for (int y = 0; y < numOfSquares; y++)
+                {
+                    visualiseWorld((x*DIMENSION/numOfSquares), (y * DIMENSION / numOfSquares), sender, e);
+                }
+            }
+            //visualiseWorld(X,Y,sender, e);
         }
         //Sets up the initial 4 points for the world corners
         private void InitWorld()
@@ -56,13 +64,13 @@ namespace DS
         private void generateLandscape(object sender, SKPaintGLSurfaceEventArgs e)
         {
             //i equals depth
-            for (int i = 1; i <= worldsize_param; i++)
+            for (int i = 1; i <= worldsiseParam; i++)
             {
                 //get the middles
                 int step = WORLDSIZE;
                 step = step / (int)Math.Pow(2, i);
                 int numberOfSteps = WORLDSIZE / step;
-                byte color = (byte)(200 * i / worldsize_param);
+                byte color = (byte)(200 * i / worldsiseParam);
                 loopThroughCenters(numberOfSteps, step);
                 loopThroughMiddles(numberOfSteps, step);
             }
@@ -89,6 +97,13 @@ namespace DS
                         Point3Z + Point4Z)
                         / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
                         );
+                        /*World[x * step, y * step] = new Node
+                        (x * step,
+                        y * step,
+                        (float)(((Point1Z + Point2Z +
+                        Point3Z + Point4Z)
+                        / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                        );*/
                     }
                 }
             }
@@ -96,11 +111,11 @@ namespace DS
             {
                 if (x < 0)
                 {
-                    return numberOfSteps_ + x;
+                    return numberOfSteps_+x;
                 }
-                else if (x > numberOfSteps_ - 1)
+                else if (x > numberOfSteps_)
                 {
-                    return x - numberOfSteps_;
+                    return x-numberOfSteps_;
                 }
                 else
                 {
@@ -125,7 +140,7 @@ namespace DS
                 }
             }
         }
-        private void visualiseWorld(object sender, SKPaintGLSurfaceEventArgs e)
+        private void visualiseWorld(int X, int Y, object sender, SKPaintGLSurfaceEventArgs e)
         {
             byte color = (byte)(0);
             for (int y = 1; y < WORLDSIZE; y++)
@@ -136,14 +151,14 @@ namespace DS
                     {
                         color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0) + 100); ;
                         e.Surface.Canvas.DrawPoint
-                        (new SKPoint(x, y),
+                        (new SKPoint(x+X-1, y+Y-1),
                         new SKColor(0, 0, color));
                     }
                     else
                     {
                         color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0));
                         e.Surface.Canvas.DrawPoint
-                        (new SKPoint(x, y),
+                        (new SKPoint(x+X-1, y+Y-1),
                         new SKColor(color, color, color));
                     }
                 }
