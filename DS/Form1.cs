@@ -25,9 +25,9 @@ namespace DS
     public partial class Form1 : Form
     {
         private static int DIMENSION = 1024;
-        private static int worldsiseParam = 9;
+        private static int worldsiseParam = 10;
         private static int WORLDSIZE = (int)Math.Pow(2, worldsiseParam);
-        private float ROUGHNESS = 5f;
+        private float ROUGHNESS = 4f;
         public int iterationNumber = 0;
         public static Random random = new Random();
         public Node[,] World;
@@ -77,12 +77,9 @@ namespace DS
         }
         private void loopThroughMiddles(int numberOfSteps, int step)
         {
-            //Debug.WriteLine(boundInt(-1, numberOfSteps));
-            //Debug.WriteLine(boundInt(5, numberOfSteps));
-            //Debug.WriteLine(boundInt(1, numberOfSteps));
-            for (int y = 0; y < numberOfSteps + 1; y++)
+            for (int y = 0; y < numberOfSteps; y++)
             {
-                for (int x = 0; x < numberOfSteps + 1; x++)
+                for (int x = 0; x < numberOfSteps; x++)
                 {
                     if ((x + y) % 2 != 0)
                     {
@@ -90,20 +87,28 @@ namespace DS
                         float Point2Z = World[boundInt(x + 1, numberOfSteps) * step, (y) * step].height;
                         float Point3Z = World[(x) * step, boundInt(y + 1, numberOfSteps) * step].height;
                         float Point4Z = World[(x) * step, boundInt(y - 1, numberOfSteps) * step].height;
+                        float FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5));
                         World[x * step, y * step] = new Node
                         (x * step,
                         y * step,
-                        (float)(((Point1Z + Point2Z +
-                        Point3Z + Point4Z)
-                        / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
+                        FinalPointZ
                         );
-                        /*World[x * step, y * step] = new Node
-                        (x * step,
-                        y * step,
-                        (float)(((Point1Z + Point2Z +
-                        Point3Z + Point4Z)
-                        / 4) + ROUGHNESS * step * (Math.Pow(random.NextDouble(), 2) - 0.5))
-                        );*/
+                        if (x == 0)
+                        {
+                            World[((numberOfSteps) * step), y * step] = new Node
+                            (((numberOfSteps) * step),
+                            y * step,
+                            FinalPointZ
+                            );
+                        }
+                        if(y == 0)
+                        {
+                            World[x * step, ((numberOfSteps) * step)] = new Node
+                            (x * step,
+                            ((numberOfSteps) * step),
+                            FinalPointZ
+                            );
+                        }
                     }
                 }
             }
@@ -147,16 +152,23 @@ namespace DS
             {
                 for (int x = 1; x < WORLDSIZE; x++)
                 {
+                    /*if (World[x,y] != null)
+                    {
+                        color = (byte)(255); ;
+                        e.Surface.Canvas.DrawPoint
+                        (new SKPoint(x + X - 1, y + Y - 1),
+                        new SKColor(0, 0, color));
+                    }*/
                     if (World[y, x].height < 202)
                     {
-                        color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0) + 100); ;
+                        color = (byte)(Math.Max(Math.Min(255 * World[y, x].height / 1024,255), 0) + 100); ;
                         e.Surface.Canvas.DrawPoint
                         (new SKPoint(x+X-1, y+Y-1),
                         new SKColor(0, 0, color));
                     }
                     else
                     {
-                        color = (byte)(Math.Max(255 * World[y, x].height / 1024, 0));
+                        color = (byte)(Math.Max(Math.Min(255 * World[y, x].height / 1024,255), 0));
                         e.Surface.Canvas.DrawPoint
                         (new SKPoint(x+X-1, y+Y-1),
                         new SKColor(color, color, color));
