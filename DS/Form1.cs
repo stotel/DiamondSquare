@@ -25,13 +25,13 @@ namespace DS
     public partial class Form1 : Form
     {
         private static int DIMENSION = 1024;
-        private static int worldsiseParam = 10;
+        private static int worldsiseParam = 9;
         private static int WORLDSIZE = (int)Math.Pow(2, worldsiseParam);
-        private float ROUGHNESS = 4f;
+        private float ROUGHNESS = 7f;
         public int iterationNumber = 0;
         public static Random random = new Random();
         public Node[,] World;
-        public List<Node> midpointLine = new List<Node>() { new Node(0, 0, 512.0f), new Node(DIMENSION, 0, 512.0f) };
+        //public List<Node> midpointLine = new List<Node>() { new Node(0, 0, 512.0f), new Node(DIMENSION, 0, 512.0f) };
         public Form1()
         {
             InitializeComponent();
@@ -55,10 +55,11 @@ namespace DS
         private void InitWorld()
         {
             World = new Node[WORLDSIZE + 1, WORLDSIZE + 1];
-            World[0, 0] = new Node(0, 0, 512.0f);
-            World[0, WORLDSIZE] = new Node(0, WORLDSIZE, 512.0f);
-            World[WORLDSIZE, 0] = new Node(WORLDSIZE, 0, 512.0f);
-            World[WORLDSIZE, WORLDSIZE] = new Node(WORLDSIZE, WORLDSIZE, 512.0f);
+            float a = (float)random.NextDouble() * 1024.0f;
+            World[0, 0] = new Node(0, 0, a);
+            World[0, WORLDSIZE] = new Node(0, WORLDSIZE, a);
+            World[WORLDSIZE, 0] = new Node(WORLDSIZE, 0, a);
+            World[WORLDSIZE, WORLDSIZE] = new Node(WORLDSIZE, WORLDSIZE, a);
         }
         //the main function
         private void generateLandscape(object sender, SKPaintGLSurfaceEventArgs e)
