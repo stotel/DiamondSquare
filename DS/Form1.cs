@@ -25,7 +25,7 @@ namespace DS
     public partial class Form1 : Form
     {
         private static int DIMENSION = 1024;
-        private float ROUGHNESS = 7f;
+        private float ROUGHNESS = 2f;
         public static Random random = new Random();
         public const int randInt = 0;
         public List<LogicalChunk> logicalChunks = new List<LogicalChunk>();
@@ -37,11 +37,11 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 32; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 32; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 256, j * 256, 8, ROUGHNESS, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 31, j * 31, 5, ROUGHNESS, random.Next(2147483647));
                     chunk.generateChunk(sender, e);
                 }
             }
