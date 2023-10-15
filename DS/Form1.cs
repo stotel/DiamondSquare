@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SkiaSharp.Views.Desktop;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace DS
 {
@@ -26,7 +27,7 @@ namespace DS
     {
         private static int DIMENSION = 1024;
         private float ROUGHNESS = 2f;
-        public static Random random = new Random();
+        public static Random random = new Random(0);
         public const int randInt = 0;
         public List<LogicalChunk> logicalChunks = new List<LogicalChunk>();
         public Form1()
@@ -37,14 +38,18 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            for (int i = 0; i < 32; i++)
+            random = new Random(0);
+            World w = new World();
+            for (int i = 3; i < 29; i++)
             {
-                for (int j = 0; j < 32; j++)
+                for (int j = 3; j < 29; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 31, j * 31, 5, ROUGHNESS, random.Next(2147483647));
-                    chunk.generateChunk(sender, e);
+                    LogicalChunk chunk = new LogicalChunk(i * 32, j * 32, 5, ROUGHNESS, random.Next(2147483647));
+                    chunk.InitChunk(w);
+                    chunk.generateLandscape(w);
                 }
             }
+            w.visualiseWorld(sender,e);
         }
         private void Do1Iteration_Click(object sender, EventArgs e)
         {
