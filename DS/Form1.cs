@@ -38,13 +38,31 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            //random = new Random(0);
+            random = new Random(0);
             World w = new World();
-            for (int i = 3; i < 29; i++)
+            for (int i = 1; i < 2; i++)
             {
-                for (int j = 3; j < 29; j++)
+                for (int j = 1; j < 3; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 33, j * 33, 5, ROUGHNESS, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 257, j * 257, 8, 2f, random.Next(2147483647));
+                    chunk.InitChunk(w);
+                    chunk.generateLandscape(w);
+                }
+            }
+            for (int i = 4; i < 6; i++)
+            {
+                for (int j = 2; j < 6; j++)
+                {
+                    LogicalChunk chunk = new LogicalChunk(i * 129-2, j * 129-2, 7, 2f, random.Next(2147483647));
+                    chunk.InitChunk(w);
+                    chunk.generateLandscape(w);
+                }
+            }
+            for (int i = 12; i < 15; i++)
+            {
+                for (int j = 4; j < 12; j++)
+                {
+                    LogicalChunk chunk = new LogicalChunk(i * 65-8, j * 65-5, 6, 2f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
