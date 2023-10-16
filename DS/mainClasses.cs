@@ -31,7 +31,7 @@ namespace DS
             {
                 for (int x = 1; x < 1025; x++)
                 {
-                    if (world[y, x].height < 0.3f)
+                    if (world[y, x].height < 0.001f)
                     {
                         color = (byte)(Math.Pow(world[y, x].height, 2) * 255 + 100);
                         e.Surface.Canvas.DrawPoint
@@ -148,19 +148,19 @@ namespace DS
                     {
                         if (x == 0 && w.world[posX + (x - 1) * step, posY + (y) * step].height == 0)
                         {
-                            w.world[posX + (x - 1) * step, posY + (y) * step].height = (float)(((w.world[posX + (x + 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y + 1) * step].height + w.world[posX + (x) * step, posY + (y - 1) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
+                            w.world[posX + (x - 1) * step-1, posY + (y) * step].height = (float)(((w.world[posX + (x + 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y + 1) * step].height + w.world[posX + (x) * step, posY + (y - 1) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
                         }
                         else if (y == 0 && w.world[posX + (x) * step, posY + (y - 1) * step].height == 0)
                         {
-                            w.world[posX + (x) * step, posY + (y - 1) * step].height = (float)(((w.world[posX + (x + 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y + 1) * step].height + w.world[posX + (x - 1) * step, posY + (y) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
+                            w.world[posX + (x) * step, posY + (y - 1) * step-1].height = (float)(((w.world[posX + (x + 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y + 1) * step].height + w.world[posX + (x - 1) * step, posY + (y) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
                         }
                         else if (x == numberOfSteps && w.world[posX + (x + 1) * step, posY + (y) * step].height == 0)
                         {
-                            w.world[posX + (x + 1) * step, posY + (y) * step].height = (float)(((w.world[posX + (x - 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y + 1) * step].height + w.world[posX + (x) * step, posY + (y - 1) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
+                            w.world[posX + (x + 1) * step+1, posY + (y) * step].height = (float)(((w.world[posX + (x - 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y + 1) * step].height + w.world[posX + (x) * step, posY + (y - 1) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
                         }
                         else if (y == numberOfSteps && w.world[posX + (x) * step, posY + (y + 1) * step].height == 0)
                         {
-                            w.world[posX + (x) * step, posY + (y + 1) * step].height = (float)(((w.world[posX + (x + 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y - 1) * step].height + w.world[posX + (x - 1) * step, posY + (y) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
+                            w.world[posX + (x) * step, posY + (y + 1) * step+1].height = (float)(((w.world[posX + (x + 1) * step, posY + (y) * step].height + w.world[posX + (x) * step, posY + (y - 1) * step].height + w.world[posX + (x - 1) * step, posY + (y) * step].height) / 3) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
                         }
                         float Point1Z = w.world[posX + (x - 1) * step, posY + (y) * step].height;
                         float Point2Z = w.world[posX + (x + 1) * step, posY + (y) * step].height;
@@ -207,7 +207,8 @@ namespace DS
                     }
                     else
                     {
-                        FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + w.world[posX + (x) * step, posY + (y) * step].height*10 )/ 14) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
+                        //Debug.WriteLine('a');
+                        FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + w.world[posX + (x) * step, posY + (y) * step].height*0.5 )/ 4.5) + ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
                     }
                     Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ,0.01f),0.99f));
                     addToWorld(w, x * step, y * step);
