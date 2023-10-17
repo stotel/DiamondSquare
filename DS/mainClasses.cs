@@ -102,7 +102,7 @@ namespace DS
         }
         private float avarageOfSurraundingPointsPlusMinimalRandom(int X,int Y,World w)
         {
-            List<float> knownCornerValues = new List<float>();
+            /*List<float> knownCornerValues = new List<float>();
             if (w.world[X - 1, Y].height != 0)
             {
                 knownCornerValues.Add(w.world[X - 1, Y].height);
@@ -123,7 +123,13 @@ namespace DS
             {
                 return ((float)random.NextDouble() * chunkSizeParam/maxSizeParam);
             }
-            return (knownCornerValues.Average() + ((float)random.NextDouble() * 2) / CHUNKSIZE);
+            return (knownCornerValues.Average() + ((float)random.NextDouble() * 2) / CHUNKSIZE);*/
+            if (w.world[X, Y].height != 0)
+            {
+                return w.world[X, Y].height;
+            }
+            return ((float)random.NextDouble() * chunkSizeParam / maxSizeParam);
+
         }
         public void generateLandscape(World w)
         {
@@ -146,46 +152,50 @@ namespace DS
                 for (int x = 0; x < numberOfSteps +1; x++)
                 {
                     if ((x + y) % 2 != 0)
-                    {   
-                        if (x == 0 && w.world[posX + (x - 1) * step, posY + (y) * step].height == 0)
+                    {
+                        if (heightFromBlockPos(w, x, y, step) == 0)
                         {
-                            float randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step),step*2));
-                            w.world[posX + (x - 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
-                            //w.world[posX + (x - 1) * step - 1, posY + (y) * step].height = randomFactorDiamondPoint;
+                            float randomFactorDiamondPoint;
+                            if (x == 0 && w.world[posX + (x - 1) * step, posY + (y) * step].height == 0)
+                            {
+                                randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
+                                w.world[posX + (x - 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
+                                //w.world[posX + (x - 1) * step - 1, posY + (y) * step].height = randomFactorDiamondPoint;
+                            }
+                            else if (y == 0 && w.world[posX + (x) * step, posY + (y - 1) * step].height == 0)
+                            {
+                                randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
+                                w.world[posX + (x) * step, posY + (y - 1) * step].height = randomFactorDiamondPoint;
+                                //w.world[posX + (x) * step, posY + (y - 1) * step - 1].height = randomFactorDiamondPoint;
+                            }
+                            else if (x == numberOfSteps && w.world[posX + (x + 1) * step, posY + (y) * step].height == 0)
+                            {
+                                randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x - 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
+                                w.world[posX + (x + 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
+                                //w.world[posX + (x + 1) * step + 1, posY + (y) * step].height = randomFactorDiamondPoint;
+                            }
+                            else if (y == numberOfSteps && w.world[posX + (x) * step, posY + (y + 1) * step].height == 0)
+                            {
+                                randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y - 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
+                                w.world[posX + (x) * step, posY + (y + 1) * step].height = randomFactorDiamondPoint;
+                                //w.world[posX + (x) * step, posY + (y + 1) * step + 1].height = randomFactorDiamondPoint;
+                            }
+                            float Point1Z = heightFromBlockPos(w, x - 1, y, step);
+                            float Point2Z = heightFromBlockPos(w, x + 1, y, step);
+                            float Point3Z = heightFromBlockPos(w, x, y - 1, step);
+                            float Point4Z = heightFromBlockPos(w, x, y + 1, step);
+                            float FinalPointZ;
+                            if (w.world[posX + (x) * step, posY + (y) * step].height == 0)
+                            {
+                                FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + addRandom(step) / 2);
+                            }
+                            else
+                            {
+                                FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z /*+ heightFromBlockPos(w, x, y, step) * 10*/) / 4) + addRandom(step) / 2);
+                            }
+                            Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
+                            addToWorld(w, x * step, y * step);
                         }
-                        else if (y == 0 && w.world[posX + (x) * step, posY + (y - 1) * step].height == 0)
-                        {
-                            float randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step*2));
-                            w.world[posX + (x) * step, posY + (y - 1) * step].height = randomFactorDiamondPoint;
-                            //w.world[posX + (x) * step, posY + (y - 1) * step - 1].height = randomFactorDiamondPoint;
-                        }
-                        else if (x == numberOfSteps && w.world[posX + (x + 1) * step, posY + (y) * step].height == 0)
-                        {
-                            float randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x - 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-                            w.world[posX + (x + 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
-                            //w.world[posX + (x + 1) * step + 1, posY + (y) * step].height = randomFactorDiamondPoint;
-                        }
-                        else if (y == numberOfSteps && w.world[posX + (x) * step, posY + (y + 1) * step].height == 0)
-                        {
-                            float randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y - 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step*2));
-                            w.world[posX + (x) * step, posY + (y + 1) * step].height = randomFactorDiamondPoint;
-                            w.world[posX + (x) * step, posY + (y + 1) * step + 1].height = randomFactorDiamondPoint;
-                        }
-                        float Point1Z = heightFromBlockPos(w, x - 1, y    , step);
-                        float Point2Z = heightFromBlockPos(w, x + 1, y    , step);
-                        float Point3Z = heightFromBlockPos(w, x    , y - 1, step);
-                        float Point4Z = heightFromBlockPos(w, x    , y + 1, step);
-                        float FinalPointZ;
-                        if (w.world[posX + (x) * step, posY + (y) * step].height == 0)
-                        {
-                            FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + addRandom(step) / 2);
-                        }
-                        else
-                        {
-                            FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + heightFromBlockPos(w, x, y , step) * 10) / 14) + addRandom(step) / 2);
-                        }
-                        Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
-                        addToWorld(w, x * step, y * step);
                     }
                 }
             }
