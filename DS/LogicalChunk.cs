@@ -53,12 +53,12 @@ namespace DS
 		}
 		private float avarageOfSurraundingPointsPlusMinimalRandom(int X, int Y, World w)
 		{
+
 			if (w.world[X, Y].height != 0)
 			{
 				return w.world[X, Y].height;
 			}
 			return ((float)random.NextDouble() * chunkSizeParam / maxSizeParam);
-
 		}
 		public void generateLandscape(World w)
 		{
@@ -186,19 +186,29 @@ namespace DS
 		}
 		private void addToWorld(World w, int x, int y)
 		{
-			int posInChunksList = w.ChunkWithCordsIndex((posX + x) / PhysicalChunk.SIZE, (posY + y) / PhysicalChunk.SIZE);
+            int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
+            int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
+            int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
 
             if (posInChunksList !=- 1)
 			{
                 w.world[posX + x, posY + y] = Chunk[x, y];
-				w.PhysicalChunks[posInChunksList].chunk[(posX + x) % PhysicalChunk.SIZE, (posY + y) % PhysicalChunk.SIZE] = Chunk[x, y];
+				w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }
 			else
 			{
                 w.world[posX + x, posY + y] = Chunk[x, y];
-                w.PhysicalChunks.Add(new PhysicalChunk((posX + x) / PhysicalChunk.SIZE, (posY + y) / PhysicalChunk.SIZE));
-                w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[(posX + x) % PhysicalChunk.SIZE, (posY + y) % PhysicalChunk.SIZE] = Chunk[x, y];
+                w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
+                w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }
+		}
+        private int[] worldCordsToChunkCords(int x, int y)
+        {
+            return (new int[] { (x) / PhysicalChunk.SIZE, (y) / PhysicalChunk.SIZE });
+        }
+        private int[] worldCordsToInChunkCords(int x, int y)
+		{
+			return (new int[] { (x) % PhysicalChunk.SIZE, (y) % PhysicalChunk.SIZE });
 		}
 	}
 }
