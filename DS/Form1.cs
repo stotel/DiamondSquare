@@ -44,7 +44,7 @@ namespace DS
             {
                 for (int j = 1; j < 3; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 256-120, j * 256-120, 8, 2f, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 256-128, j * 256-128, 8, 2f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
@@ -53,7 +53,7 @@ namespace DS
             {
                 for (int j = 2; j < 6; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 128-120, j * 128-120, 7, 2f, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 128-128, j * 128-128, 7, 2f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
@@ -62,7 +62,7 @@ namespace DS
             {
                 for (int j = 4; j < 12; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 64-120, j * 64-120, 6, 2f, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 64-128, j * 64-128, 6, 2f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
