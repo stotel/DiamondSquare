@@ -102,28 +102,6 @@ namespace DS
         }
         private float avarageOfSurraundingPointsPlusMinimalRandom(int X,int Y,World w)
         {
-            /*List<float> knownCornerValues = new List<float>();
-            if (w.world[X - 1, Y].height != 0)
-            {
-                knownCornerValues.Add(w.world[X - 1, Y].height);
-            }
-            if (w.world[X + 1, Y].height != 0)
-            {
-                knownCornerValues.Add(w.world[X + 1, Y].height);
-            }
-            if (w.world[X, Y - 1].height != 0)
-            {
-                knownCornerValues.Add(w.world[X, Y - 1].height);
-            }
-            if (w.world[X, Y + 1].height != 0)
-            {
-                knownCornerValues.Add(w.world[X, Y + 1].height);
-            }
-            if(knownCornerValues.Count == 0)
-            {
-                return ((float)random.NextDouble() * chunkSizeParam/maxSizeParam);
-            }
-            return (knownCornerValues.Average() + ((float)random.NextDouble() * 2) / CHUNKSIZE);*/
             if (w.world[X, Y].height != 0)
             {
                 return w.world[X, Y].height;
@@ -160,25 +138,21 @@ namespace DS
                             {
                                 randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
                                 w.world[posX + (x - 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
-                                //w.world[posX + (x - 1) * step - 1, posY + (y) * step].height = randomFactorDiamondPoint;
                             }
                             else if (y == 0 && w.world[posX + (x) * step, posY + (y - 1) * step].height == 0)
                             {
                                 randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
                                 w.world[posX + (x) * step, posY + (y - 1) * step].height = randomFactorDiamondPoint;
-                                //w.world[posX + (x) * step, posY + (y - 1) * step - 1].height = randomFactorDiamondPoint;
                             }
                             else if (x == numberOfSteps && w.world[posX + (x + 1) * step, posY + (y) * step].height == 0)
                             {
                                 randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x - 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
                                 w.world[posX + (x + 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
-                                //w.world[posX + (x + 1) * step + 1, posY + (y) * step].height = randomFactorDiamondPoint;
                             }
                             else if (y == numberOfSteps && w.world[posX + (x) * step, posY + (y + 1) * step].height == 0)
                             {
                                 randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y - 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
                                 w.world[posX + (x) * step, posY + (y + 1) * step].height = randomFactorDiamondPoint;
-                                //w.world[posX + (x) * step, posY + (y + 1) * step + 1].height = randomFactorDiamondPoint;
                             }
                             float Point1Z = heightFromBlockPos(w, x - 1, y, step);
                             float Point2Z = heightFromBlockPos(w, x + 1, y, step);
@@ -199,21 +173,6 @@ namespace DS
                     }
                 }
             }
-            /*int boundInt(int x, int numberOfSteps_)
-            {
-                if (x < 0)
-                {
-                    return numberOfSteps_ + x;
-                }
-                else if (x > numberOfSteps_)
-                {
-                    return x - numberOfSteps_;
-                }
-                else
-                {
-                    return x;
-                }
-            }*/
         }
         //generate centrs
         private void loopThroughCenters(int numberOfSteps, int step, World w)

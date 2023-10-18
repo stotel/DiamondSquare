@@ -38,7 +38,7 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            random = new Random(0);
+            //random = new Random(0);
             World w = new World();
             for (int i = 1; i < 2; i++)
             {
