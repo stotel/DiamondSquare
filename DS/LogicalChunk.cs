@@ -40,16 +40,14 @@ namespace DS
 		}
 		public void InitChunk(World w)
 		{
-			//float a = (float)random.NextDouble();
-			//float a = 0.5f;
 			Chunk[0, 0] = new HeightNode(avarageOfSurraundingPointsPlusMinimalRandom(posX, posY, w));
-			addToWorld(w, 0, 0);
+			TransferFromLogicalChunkToWorld(w, 0, 0);
 			Chunk[0, CHUNKSIZE] = new HeightNode(avarageOfSurraundingPointsPlusMinimalRandom(posX, posY + CHUNKSIZE, w));
-			addToWorld(w, 0, CHUNKSIZE);
+			TransferFromLogicalChunkToWorld(w, 0, CHUNKSIZE);
 			Chunk[CHUNKSIZE, 0] = new HeightNode(avarageOfSurraundingPointsPlusMinimalRandom(posX + CHUNKSIZE, posY, w));
-			addToWorld(w, CHUNKSIZE, 0);
+			TransferFromLogicalChunkToWorld(w, CHUNKSIZE, 0);
 			Chunk[CHUNKSIZE, CHUNKSIZE] = new HeightNode(avarageOfSurraundingPointsPlusMinimalRandom(posX + CHUNKSIZE, posY + CHUNKSIZE, w));
-			addToWorld(w, CHUNKSIZE, CHUNKSIZE);
+			TransferFromLogicalChunkToWorld(w, CHUNKSIZE, CHUNKSIZE);
 		}
 		private float avarageOfSurraundingPointsPlusMinimalRandom(int X, int Y, World w)
 		{
@@ -103,32 +101,32 @@ namespace DS
 						if (heightFromBlockPos(w, x, y, step) == 0)
 						{
 							float randomFactorDiamondPoint;
-							if (x == 0 && w.world[posX + (x - 1) * step, posY + (y) * step].height == 0)
+							if (x == 0 && w.GetHeightByCords(posX + (x - 1) * step, posY + (y) * step) == 0)
 							{
 								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-								w.world[posX + (x - 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
+								AddToWorld(w, (x - 1) * step, (y) * step, randomFactorDiamondPoint);
 							}
-							else if (y == 0 && w.world[posX + (x) * step, posY + (y - 1) * step].height == 0)
+							else if (y == 0 && w.GetHeightByCords(posX + (x) * step, posY + (y - 1) * step) == 0)
 							{
 								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-								w.world[posX + (x) * step, posY + (y - 1) * step].height = randomFactorDiamondPoint;
-							}
-							else if (x == numberOfSteps && w.world[posX + (x + 1) * step, posY + (y) * step].height == 0)
+                                AddToWorld(w, (x) * step, (y - 1) * step, randomFactorDiamondPoint);
+                            }
+							else if (x == numberOfSteps && w.GetHeightByCords(posX + (x + 1) * step, posY + (y) * step) == 0)
 							{
 								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x - 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-								w.world[posX + (x + 1) * step, posY + (y) * step].height = randomFactorDiamondPoint;
-							}
-							else if (y == numberOfSteps && w.world[posX + (x) * step, posY + (y + 1) * step].height == 0)
+                                AddToWorld(w, (x + 1) * step, (y) * step, randomFactorDiamondPoint);
+                            }
+							else if (y == numberOfSteps && w.GetHeightByCords(posX + (x) * step, posY + (y + 1) * step) == 0)
 							{
 								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y - 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-								w.world[posX + (x) * step, posY + (y + 1) * step].height = randomFactorDiamondPoint;
-							}
+                                AddToWorld(w, (x) * step, (y + 1) * step, randomFactorDiamondPoint);
+                            }
 							float Point1Z = heightFromBlockPos(w, x - 1, y, step);
 							float Point2Z = heightFromBlockPos(w, x + 1, y, step);
 							float Point3Z = heightFromBlockPos(w, x, y - 1, step);
 							float Point4Z = heightFromBlockPos(w, x, y + 1, step);
 							float FinalPointZ;
-							if (w.world[posX + (x) * step, posY + (y) * step].height == 0)
+							if (w.GetHeightByCords(posX + (x) * step, posY + (y) * step) == 0)
 							{
 								FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + addRandom(step) / 2);
 							}
@@ -137,7 +135,7 @@ namespace DS
 								FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z /*+ heightFromBlockPos(w, x, y, step) * 10*/) / 4) + addRandom(step) / 2);
 							}
 							Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
-							addToWorld(w, x * step, y * step);
+							TransferFromLogicalChunkToWorld(w, x * step, y * step);
 						}
 					}
 				}
@@ -156,23 +154,22 @@ namespace DS
 					float Point3Z = heightFromBlockPos(w, x - 1, y + 1, step);
 					float Point4Z = heightFromBlockPos(w, x + 1, y - 1, step);
 					float FinalPointZ;
-					if (w.world[posX + (x) * step, posY + (y) * step].height == 0)
+					if (w.GetHeightByCords(posX + (x) * step, posY + (y) * step) == 0)
 					{
 						FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + addRandom(step) / 2);
 					}
 					else
 					{
-						//Debug.WriteLine('a');
 						FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + heightFromBlockPos(w, x, y, step) * (numberOfSteps - step)) / (numberOfSteps - step + 4)) + addRandom(step) / 2);
 					}
 					Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
-					addToWorld(w, x * step, y * step);
+					TransferFromLogicalChunkToWorld(w, x * step, y * step);
 				}
 			}
 		}
 		private float heightFromBlockPos(World w, int X, int Y, int step)
 		{
-			return w.world[posX + (X) * step, posY + (Y) * step].height;
+			return w.GetHeightByCords(posX + (X) * step, posY + (Y) * step);
 		}
 		private double addRandom(int step)
 		{
@@ -202,7 +199,23 @@ namespace DS
 				}
 			}
 		}
-		private void addToWorld(World w, int x, int y)
+		private void AddToWorld(World w, int x, int y, float height)
+		{
+            int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
+            int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
+            int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
+
+            if (posInChunksList != -1)
+            {
+                w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]].height = height;
+            }
+            else
+            {
+                w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
+                w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]].height = height;
+            }
+        }
+		private void TransferFromLogicalChunkToWorld(World w, int x, int y)
 		{
             int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
             int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
@@ -210,12 +223,10 @@ namespace DS
 
             if (posInChunksList !=- 1)
 			{
-                w.world[posX + x, posY + y] = Chunk[x, y];
 				w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }
 			else
 			{
-                w.world[posX + x, posY + y] = Chunk[x, y];
                 w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
                 w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }

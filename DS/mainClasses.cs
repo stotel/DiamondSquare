@@ -14,7 +14,6 @@ namespace DS
     {
         public List<LogicalChunk> logicalChunks = new List<LogicalChunk>();
         public List<PhysicalChunk> PhysicalChunks = new List<PhysicalChunk>();
-        public HeightNode[,] world = new HeightNode[1025,1025];
 
         public World()
         {
@@ -30,29 +29,18 @@ namespace DS
             }
             return -1;
         }
+        public float GetHeightByCords(int X,int Y)
+        {
+            int chunkInd = ChunkWithCordsIndex(X/ PhysicalChunk.SIZE, Y/ PhysicalChunk.SIZE);
+            if (chunkInd == -1)
+            {
+                return 0;
+            }
+            return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
+        }
         public void visualiseWorld(object sender, SKPaintGLSurfaceEventArgs e)
         {
             byte color;
-            /*for (int y = 1; y < 1025; y++)
-            {
-                for (int x = 1; x < 1025; x++)
-                {
-                    if (world[y, x].height < 0.3f)
-                    {
-                        color = (byte)(Math.Pow(world[y, x].height, 2) * 255 + 100);
-                        e.Surface.Canvas.DrawPoint
-                        (new SKPoint(x, y),
-                        new SKColor(0, 0, color));
-                    }
-                    else
-                    {
-                        color = (byte)(Math.Pow(world[y, x].height, 1) * 255 + 50);
-                        e.Surface.Canvas.DrawPoint
-                        (new SKPoint(x, y),
-                        new SKColor(color, color, color));
-                    }
-                }
-            }*/
             for (int i = 0; i < PhysicalChunks.Count; i++)
             {
                 for (int j = 0; j < PhysicalChunk.SIZE; j++)
