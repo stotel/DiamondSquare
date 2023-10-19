@@ -53,12 +53,30 @@ namespace DS
 		}
 		private float avarageOfSurraundingPointsPlusMinimalRandom(int X, int Y, World w)
 		{
-
-			if (w.world[X, Y].height != 0)
+            int[] inChunkCords = worldCordsToInChunkCords(X, Y);
+            int[] chunkCords = worldCordsToChunkCords(X, Y);
+            int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
+			if (posInChunksList != -1)
 			{
-				return w.world[X, Y].height;
-			}
-			return ((float)random.NextDouble() * chunkSizeParam / maxSizeParam);
+				float height = w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]].height;
+                if (height != 0)
+                {
+                    return height;
+                }
+				height = (float)random.NextDouble() * chunkSizeParam / maxSizeParam;
+                return height;
+            }
+			else
+			{
+                w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
+                float height = w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]].height;
+                if (height != 0)
+                {
+                    return height;
+                }
+                height = (float)random.NextDouble() * chunkSizeParam / maxSizeParam;
+                return height;
+            }
 		}
 		public void generateLandscape(World w)
 		{
