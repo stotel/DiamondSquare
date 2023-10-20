@@ -36,7 +36,6 @@ namespace DS
 		{
 			InitChunk(w);
 			generateLandscape(w);
-			visualiseChunk(posX, posY, sender, e);
 		}
 		public void InitChunk(World w)
 		{
@@ -67,7 +66,8 @@ namespace DS
 			else
 			{
                 w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
-                float height = w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]].height;
+                w.PhysicalChunksDict.Add(( chunkCords[0], chunkCords[1]), w.PhysicalChunks.Count() - 1);
+                float height =  w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]].height;
                 if (height != 0)
                 {
                     return height;
@@ -104,7 +104,6 @@ namespace DS
                             float Point2Z = heightFromBlockPos(w, x + 1, y, step);
                             float Point3Z = heightFromBlockPos(w, x, y - 1, step);
                             float Point4Z = heightFromBlockPos(w, x, y + 1, step);
-                            //float randomFactorDiamondPoint;
 							if (x == 0 && Point1Z == 0)
 							{
 								Point1Z = (float)(((Point2Z + Point4Z + Point3Z) / 3) + Math.Pow(addRandom(step), step * 2));
@@ -175,30 +174,6 @@ namespace DS
 		{
 			return (ROUGHNESS * ((float)step / CHUNKSIZE) * (random.NextDouble() - 0.5));
 		}
-		public void visualiseChunk(int X, int Y, object sender, SKPaintGLSurfaceEventArgs e)
-		{
-			byte color;
-			for (int y = 1; y < CHUNKSIZE; y++)
-			{
-				for (int x = 1; x < CHUNKSIZE; x++)
-				{
-					if (Chunk[y, x].height < 0f)
-					{
-						color = (byte)(Math.Pow(Chunk[y, x].height, 2) * 255 + 100);
-						e.Surface.Canvas.DrawPoint
-						(new SKPoint(x + X - 1, y + Y - 1),
-						new SKColor(0, 0, color));
-					}
-					else
-					{
-						color = (byte)(Math.Pow(Chunk[y, x].height, 2) * 255);
-						e.Surface.Canvas.DrawPoint
-						(new SKPoint(x + X - 1, y + Y - 1),
-						new SKColor(color, color, color));
-					}
-				}
-			}
-		}
 		private void AddToWorld(World w, int x, int y, float height)
 		{
             int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
@@ -212,6 +187,7 @@ namespace DS
             else
             {
                 w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
+                w.PhysicalChunksDict.Add((chunkCords[0], chunkCords[1]), w.PhysicalChunks.Count() - 1);
                 w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]].height = height;
             }
         }
@@ -220,14 +196,14 @@ namespace DS
             int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
             int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
             int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
-
-            if (posInChunksList !=- 1)
+            if (posInChunksList != -1)
 			{
-				w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
+                w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }
 			else
 			{
                 w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
+				w.PhysicalChunksDict.Add((chunkCords[0], chunkCords[1]), w.PhysicalChunks.Count() - 1);
                 w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }
 		}

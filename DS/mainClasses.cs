@@ -2,6 +2,7 @@
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,20 +15,14 @@ namespace DS
     {
         public List<LogicalChunk> logicalChunks = new List<LogicalChunk>();
         public List<PhysicalChunk> PhysicalChunks = new List<PhysicalChunk>();
+        public Dictionary<(int,int),int> PhysicalChunksDict = new Dictionary<(int, int), int>();
 
         public World()
         {
         }
         public int ChunkWithCordsIndex(int X,int Y)
         {
-            for (int i = 0; i < PhysicalChunks.Count; i++)
-            {
-                if (PhysicalChunks[i].posX == X && PhysicalChunks[i].posY == Y)
-                {
-                    return i;
-                }
-            }
-            return -1;
+            return PhysicalChunksDict.TryGetValue((X, Y), out var result) ? result : -1;
         }
         public float GetHeightByCords(int X,int Y)
         {
