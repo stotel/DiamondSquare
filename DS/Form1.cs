@@ -25,8 +25,8 @@ namespace DS
 {
     public partial class Form1 : Form
     {
-        private static int DIMENSION = 1024;
-        private float ROUGHNESS = 1f;
+        //private static int DIMENSION = 1024;
+        //private float ROUGHNESS = 1f;
         public static Random random = new Random();
         public const int randInt = 0;
         public List<LogicalChunk> logicalChunks = new List<LogicalChunk>();

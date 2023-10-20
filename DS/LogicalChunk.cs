@@ -100,31 +100,31 @@ namespace DS
 					{
 						if (heightFromBlockPos(w, x, y, step) == 0)
 						{
-							float randomFactorDiamondPoint;
-							if (x == 0 && w.GetHeightByCords(posX + (x - 1) * step, posY + (y) * step) == 0)
+                            float Point1Z = heightFromBlockPos(w, x - 1, y, step);
+                            float Point2Z = heightFromBlockPos(w, x + 1, y, step);
+                            float Point3Z = heightFromBlockPos(w, x, y - 1, step);
+                            float Point4Z = heightFromBlockPos(w, x, y + 1, step);
+                            //float randomFactorDiamondPoint;
+							if (x == 0 && Point1Z == 0)
 							{
-								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-								AddToWorld(w, (x - 1) * step, (y) * step, randomFactorDiamondPoint);
+								Point1Z = (float)(((Point2Z + Point4Z + Point3Z) / 3) + Math.Pow(addRandom(step), step * 2));
+								AddToWorld(w, (x - 1) * step, (y) * step, Point1Z);
 							}
-							else if (y == 0 && w.GetHeightByCords(posX + (x) * step, posY + (y - 1) * step) == 0)
+							else if (y == 0 && Point3Z == 0)
 							{
-								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-                                AddToWorld(w, (x) * step, (y - 1) * step, randomFactorDiamondPoint);
+								Point3Z = (float)(((Point2Z + Point4Z + Point1Z) / 3) + Math.Pow(addRandom(step), step * 2));
+                                AddToWorld(w, (x) * step, (y - 1) * step, Point3Z);
                             }
-							else if (x == numberOfSteps && w.GetHeightByCords(posX + (x + 1) * step, posY + (y) * step) == 0)
+							else if (x == numberOfSteps && Point2Z == 0)
 							{
-								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x - 1, y, step) + heightFromBlockPos(w, x, y + 1, step) + heightFromBlockPos(w, x, y - 1, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-                                AddToWorld(w, (x + 1) * step, (y) * step, randomFactorDiamondPoint);
+								Point2Z = (float)(((Point1Z + Point4Z + Point3Z) / 3) + Math.Pow(addRandom(step), step * 2));
+                                AddToWorld(w, (x + 1) * step, (y) * step, Point2Z);
                             }
-							else if (y == numberOfSteps && w.GetHeightByCords(posX + (x) * step, posY + (y + 1) * step) == 0)
+							else if (y == numberOfSteps && Point4Z == 0)
 							{
-								randomFactorDiamondPoint = (float)(((heightFromBlockPos(w, x + 1, y, step) + heightFromBlockPos(w, x, y - 1, step) + heightFromBlockPos(w, x - 1, y, step)) / 3) + Math.Pow(addRandom(step), step * 2));
-                                AddToWorld(w, (x) * step, (y + 1) * step, randomFactorDiamondPoint);
+								Point4Z = (float)(((Point2Z + Point3Z + Point1Z) / 3) + Math.Pow(addRandom(step), step * 2));
+                                AddToWorld(w, (x) * step, (y + 1) * step, Point4Z);
                             }
-							float Point1Z = heightFromBlockPos(w, x - 1, y, step);
-							float Point2Z = heightFromBlockPos(w, x + 1, y, step);
-							float Point3Z = heightFromBlockPos(w, x, y - 1, step);
-							float Point4Z = heightFromBlockPos(w, x, y + 1, step);
 							float FinalPointZ;
 							if (w.GetHeightByCords(posX + (x) * step, posY + (y) * step) == 0)
 							{
