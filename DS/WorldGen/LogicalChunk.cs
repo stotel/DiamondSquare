@@ -131,7 +131,7 @@ namespace DS
 							}
 							else
 							{
-								FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z /*+ heightFromBlockPos(w, x, y, step) * 10*/) / 4) + addRandom(step) / 2);
+								FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + heightFromBlockPos(w, x, y, step) * (numberOfSteps - step)) / (numberOfSteps - step + 4)) + addRandom(step) / 2);
 							}
 							Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
 							TransferFromLogicalChunkToWorld(w, x * step, y * step);

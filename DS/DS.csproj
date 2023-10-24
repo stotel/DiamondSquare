@@ -99,14 +99,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Moover.cs" />
+    <Compile Include="WorldGen\World.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="mainClasses.cs" />
-	<Compile Include="LogicalChunk.cs" />
+    <Compile Include="AuxillaryClasses.cs" />
+    <Compile Include="WorldGen\LogicalChunk.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

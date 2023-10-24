@@ -41,6 +41,7 @@
             this.skglControl1.TabIndex = 0;
             this.skglControl1.VSync = false;
             this.skglControl1.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.display);
+            this.skglControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.skglControl1_KeyDown);
             // 
             // Do1Iteration
             // 

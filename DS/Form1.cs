@@ -30,6 +30,7 @@ namespace DS
         public static Random random = new Random();
         public const int randInt = 0;
         public List<LogicalChunk> logicalChunks = new List<LogicalChunk>();
+        World w = new World();
         public Form1()
         {
             InitializeComponent();
@@ -38,13 +39,17 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            //random = new Random(0);
-            World w = new World();
+            //Debug.WriteLine(Moover.PosY);
+            w.visualiseWorld(sender,e,Moover.PosX,Moover.PosY);
+            //e.Surface.Canvas.Clear();
+        }
+        private void ChunkTest()
+        {
             for (int i = 1; i < 2; i++)
             {
                 for (int j = 1; j < 3; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 256-128, j * 256-128, 8, 2f, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 256 - 128, j * 256 - 128, 8, 4f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
@@ -53,7 +58,7 @@ namespace DS
             {
                 for (int j = 2; j < 6; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 128-128, j * 128-128, 7, 2f, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 128 - 128, j * 128 - 128, 7, 2f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
@@ -62,15 +67,21 @@ namespace DS
             {
                 for (int j = 4; j < 12; j++)
                 {
-                    LogicalChunk chunk = new LogicalChunk(i * 64-128, j * 64-128, 6, 2f, random.Next(2147483647));
+                    LogicalChunk chunk = new LogicalChunk(i * 64 - 128, j * 64 - 128, 6, 1f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
                 }
             }
-            w.visualiseWorld(sender,e);
         }
         private void Do1Iteration_Click(object sender, EventArgs e)
         {
+            skglControl1.Invalidate();
+            ChunkTest();
+        }
+
+        private void skglControl1_KeyDown(object sender, KeyEventArgs e)
+        {
+            Moover.Moove(e);
             skglControl1.Invalidate();
         }
     }
