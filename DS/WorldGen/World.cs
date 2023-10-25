@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace DS
 {
@@ -30,6 +31,24 @@ namespace DS
             }
             return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
         }
+        /*public void visualizePhysicalChunks(object sender, SKPaintGLSurfaceEventArgs e, int ShiftX, int ShiftY)
+        {
+            for i in PhysicalChunks{
+                e.Surface.Canvas.DrawRect(i.posX, i.posY, 1, PhysicalChunk.SIZE, new SKColor(0, 255, 0));
+                e.Surface.Canvas.DrawRect(i.posX, i.posY + PhysicalChunk.SIZE, 1, PhysicalChunk.SIZE, new SKColor(0, 255, 0));
+                e.Surface.Canvas.DrawRect(i.posX, i.posY, PhysicalChunk.SIZE, 1, new SKColor(0, 255, 0));
+                e.Surface.Canvas.DrawRect(i.posX+ PhysicalChunk.SIZE, i.posY, PhysicalChunk.SIZE, 1, new SKColor(0, 255, 0));
+            }
+        }
+        public void visualizeLogicalChunks(object sender, SKPaintGLSurfaceEventArgs e, int ShiftX, int ShiftY)
+        {
+            for i in LogicalChunks{
+                e.Surface.Canvas.DrawRect(i.posX, i.posY, 1, PhysicalChunk.SIZE, new SKColor(255, 0, 0));
+                e.Surface.Canvas.DrawRect(i.posX, i.posY + PhysicalChunk.SIZE, 1, PhysicalChunk.SIZE, new SKColor(255, 0, 0));
+                e.Surface.Canvas.DrawRect(i.posX, i.posY, PhysicalChunk.SIZE, 1, new SKColor(255, 0, 0));
+                e.Surface.Canvas.DrawRect(i.posX + PhysicalChunk.SIZE, i.posY, PhysicalChunk.SIZE, 1, new SKColor(255, 0, 0));
+            }
+        }*/
         public void visualiseWorld(object sender, SKPaintGLSurfaceEventArgs e, int ShiftX, int ShiftY)
         {
             byte color;
@@ -39,19 +58,23 @@ namespace DS
                 {
                     for (int k = 0; k < PhysicalChunk.SIZE; k++)
                     {
-                        if (PhysicalChunks[i].chunk[k, j].height < 0.3f)
+                        float pointHeight = PhysicalChunks[i].chunk[k, j].height;
+                        if (pointHeight != 0)
                         {
-                            color = (byte)(Math.Pow(PhysicalChunks[i].chunk[k, j].height, 1) * 255 + 100);
-                            e.Surface.Canvas.DrawPoint
-                            (new SKPoint(PhysicalChunks[i].posX * PhysicalChunk.SIZE + k + ShiftX, PhysicalChunks[i].posY * PhysicalChunk.SIZE + j + ShiftY),
-                            new SKColor(0, 0, color));
-                        }
-                        else
-                        {
-                            color = (byte)(Math.Pow(PhysicalChunks[i].chunk[k, j].height, 1) * 255 + 50);
-                            e.Surface.Canvas.DrawPoint
-                            (new SKPoint(PhysicalChunks[i].posX * PhysicalChunk.SIZE + k + ShiftX, PhysicalChunks[i].posY * PhysicalChunk.SIZE + j + ShiftY),
-                            new SKColor(color, color, color));
+                            if (pointHeight < 0.3f)
+                            {
+                                color = (byte)(Math.Pow(pointHeight, 1) * 255 + 100);
+                                e.Surface.Canvas.DrawPoint
+                                (new SKPoint(PhysicalChunks[i].posX * PhysicalChunk.SIZE + k + ShiftX, PhysicalChunks[i].posY * PhysicalChunk.SIZE + j + ShiftY),
+                                new SKColor(0, 0, color));
+                            }
+                            else
+                            {
+                                color = (byte)(Math.Pow(pointHeight, 1) * 255 + 50);
+                                e.Surface.Canvas.DrawPoint
+                                (new SKPoint(PhysicalChunks[i].posX * PhysicalChunk.SIZE + k + ShiftX, PhysicalChunks[i].posY * PhysicalChunk.SIZE + j + ShiftY),
+                                new SKColor(color, color, color));
+                            }
                         }
                     }
                 }

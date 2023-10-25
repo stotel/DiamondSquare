@@ -32,5 +32,7 @@ namespace DS
             posX = PosX_;
             posY = PosY_;
         }
+        
+        //public bool Validate
     }
 }

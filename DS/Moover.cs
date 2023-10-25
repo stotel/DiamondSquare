@@ -11,6 +11,7 @@ namespace DS
     {
         public static int PosX;
         public static int PosY;
+        private const int RenderDistance = 400;
         public Moover(int X, int Y) 
         {
             PosX = X;
@@ -33,6 +34,10 @@ namespace DS
                     PosX -= 50;
                     break;
             }
+        }
+        public void loadNewChunks(World w)
+        {
+
         }
     }
 }
