@@ -39,8 +39,10 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            //Debug.WriteLine(Moover.PosY);
+            Debug.WriteLine(Moover.PosY);
             w.visualiseWorld(sender,e,Moover.PosX,Moover.PosY);
+            w.visualizePhysicalChunks(sender, e, Moover.PosX, Moover.PosY);
+            w.visualizeLogicalChunks(sender, e, Moover.PosX, Moover.PosY);
             //e.Surface.Canvas.Clear();
         }
         private void ChunkTest()
@@ -52,6 +54,7 @@ namespace DS
                     LogicalChunk chunk = new LogicalChunk(i * 256 - 128, j * 256 - 128, 8, 4f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
+                    w.LogicalChunks.Add(chunk);
                 }
             }
             for (int i = 4; i < 6; i++)
@@ -61,6 +64,7 @@ namespace DS
                     LogicalChunk chunk = new LogicalChunk(i * 128 - 128, j * 128 - 128, 7, 2f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
+                    w.LogicalChunks.Add(chunk);
                 }
             }
             for (int i = 12; i < 15; i++)
@@ -70,6 +74,7 @@ namespace DS
                     LogicalChunk chunk = new LogicalChunk(i * 64 - 128, j * 64 - 128, 6, 1f, random.Next(2147483647));
                     chunk.InitChunk(w);
                     chunk.generateLandscape(w);
+                    w.LogicalChunks.Add(chunk);
                 }
             }
         }

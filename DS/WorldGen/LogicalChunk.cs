@@ -13,7 +13,7 @@ namespace DS
 	public class LogicalChunk
 	{
 		public static int chunkSizeParam;
-		public static int CHUNKSIZE;
+		public int CHUNKSIZE;
 		public float ROUGHNESS;
 		private static int maxSizeParam = 16;
 		public int posX; public int posY;
