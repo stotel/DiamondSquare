@@ -82,6 +82,7 @@ namespace DS
         {
             skglControl1.Invalidate();
             ChunkTest();
+            w.findRenderedPhysicalChunks();
         }
 
         private void skglControl1_KeyDown(object sender, KeyEventArgs e)
