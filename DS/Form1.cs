@@ -45,8 +45,8 @@ namespace DS
         }
         private void ChunkTest()
         {
-            w = new World();
-            for (int i = 1; i < 2; i++)
+            //w = new World();
+            /*for (int i = 1; i < 2; i++)
             {
                 for (int j = 1; j < 3; j++)
                 {
@@ -75,7 +75,11 @@ namespace DS
                     chunk.generateLandscape(w);
                     w.LogicalChunks.Add(chunk);
                 }
-            }
+            }*/
+            LogicalChunk chunk = new LogicalChunk(500 - 128, 500 - 128, 8, 4f, random.Next(2147483647));
+            chunk.InitChunk(w);
+            chunk.generateLandscape(w);
+            w.LogicalChunks.Add(chunk);
         }
         private void skglControl1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -92,7 +96,8 @@ namespace DS
 
         private void expandClick(object sender, EventArgs e)
         {
-
+            w.expandWorldInAllDirections(random);
+            skglControl1.Invalidate();
         }
     }
 }

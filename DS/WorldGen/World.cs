@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace DS
 {
@@ -62,6 +63,29 @@ namespace DS
             {
                 PhysicalChunks[i].DrawPhysycalChunk(sender, e, ShiftX, ShiftY);
             }
+        }
+
+        public void expandWorldInAllDirections(Random random)
+        {
+            List<PhysicalChunk> CurrentUnrenderedPhysicalChunks = new List<PhysicalChunk>() ;
+            Debug.WriteLine(LogicalChunks.Count);
+            foreach (PhysicalChunk i in PhysicalChunks)
+            {
+                if (i.isRendered == false)
+                {
+                    CurrentUnrenderedPhysicalChunks.Add(i);
+                }
+            }
+            foreach(PhysicalChunk i in CurrentUnrenderedPhysicalChunks)
+            {
+                int powOf2LogChunkSize = random.Next(5,7);
+                int ChSideSize = (int)Math.Pow(2, powOf2LogChunkSize);
+                LogicalChunk chunk = new LogicalChunk((i.posX+1)*PhysicalChunk.SIZE-ChSideSize, (i.posY+1)*PhysicalChunk.SIZE - ChSideSize, powOf2LogChunkSize, 2f, random.Next(2147483647));
+                chunk.InitChunk(this);
+                chunk.generateLandscape(this);
+                LogicalChunks.Add(chunk);
+            }
+            Debug.WriteLine(LogicalChunks.Count);
         }
     }
 }
