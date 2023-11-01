@@ -39,14 +39,13 @@ namespace DS
         private void display(object sender, SKPaintGLSurfaceEventArgs e)
         {
             e.Surface.Canvas.Clear();
-            Debug.WriteLine(Moover.PosY);
             w.visualiseWorld(sender,e,Moover.PosX,Moover.PosY);
             w.visualizePhysicalChunks(sender, e, Moover.PosX, Moover.PosY);
             w.visualizeLogicalChunks(sender, e, Moover.PosX, Moover.PosY);
-            //e.Surface.Canvas.Clear();
         }
         private void ChunkTest()
         {
+            w = new World();
             for (int i = 1; i < 2; i++)
             {
                 for (int j = 1; j < 3; j++)
@@ -78,17 +77,22 @@ namespace DS
                 }
             }
         }
-        private void Do1Iteration_Click(object sender, EventArgs e)
-        {
-            skglControl1.Invalidate();
-            ChunkTest();
-            w.findRenderedPhysicalChunks();
-        }
-
         private void skglControl1_KeyDown(object sender, KeyEventArgs e)
         {
             Moover.Moove(e);
             skglControl1.Invalidate();
+        }
+
+        private void generate_Click(object sender, EventArgs e)
+        {
+            ChunkTest();
+            w.findRenderedPhysicalChunks();
+            skglControl1.Invalidate();
+        }
+
+        private void expandClick(object sender, EventArgs e)
+        {
+
         }
     }
 }

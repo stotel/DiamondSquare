@@ -41,11 +41,6 @@ namespace DS
         public void visualizePhysicalChunks(object sender, SKPaintGLSurfaceEventArgs e, int ShiftX, int ShiftY)
         {
             foreach(PhysicalChunk i in PhysicalChunks){
-                /*SKPaint paint = new SKPaint { Color = new SKColor(0, 255, 0) };
-                e.Surface.Canvas.DrawRect(i.posX * PhysicalChunk.SIZE + ShiftX, i.posY * PhysicalChunk.SIZE + ShiftY, 1, PhysicalChunk.SIZE, paint);
-                e.Surface.Canvas.DrawRect(i.posX * PhysicalChunk.SIZE + ShiftX, i.posY * PhysicalChunk.SIZE + PhysicalChunk.SIZE + ShiftY, PhysicalChunk.SIZE, 1, paint);
-                e.Surface.Canvas.DrawRect(i.posX * PhysicalChunk.SIZE + ShiftX, i.posY * PhysicalChunk.SIZE + ShiftY, PhysicalChunk.SIZE, 1, paint);
-                e.Surface.Canvas.DrawRect(i.posX * PhysicalChunk.SIZE + PhysicalChunk.SIZE + ShiftX, i.posY * PhysicalChunk.SIZE + ShiftY, 1, PhysicalChunk.SIZE, paint);*/
                 i.DrawPhysicalChunkBorder(sender, e, ShiftX, ShiftY);
             }
         }
