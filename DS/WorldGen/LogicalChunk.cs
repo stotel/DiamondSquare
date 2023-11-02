@@ -176,7 +176,7 @@ namespace DS
 		}
 		private void AddToWorld(World w, int x, int y, float height)
 		{
-            int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
+            int[] inChunkCords = worldCordsToInChunkCords(UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(posX + x), UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(posY + y));
             int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
             int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
 
@@ -193,7 +193,7 @@ namespace DS
         }
 		private void TransferFromLogicalChunkToWorld(World w, int x, int y)
 		{
-            int[] inChunkCords = worldCordsToInChunkCords(posX + x, posY + y);
+            int[] inChunkCords = worldCordsToInChunkCords(UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(posX + x), UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(posY + y));
             int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
             int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
             if (posInChunksList != -1)

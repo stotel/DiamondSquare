@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Moover.cs" />
+    <Compile Include="UtilityFunctions.cs" />
     <Compile Include="WorldGen\World.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

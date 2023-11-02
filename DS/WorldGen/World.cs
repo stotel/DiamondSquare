@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using System.Runtime.Remoting.Messaging;
 
 namespace DS
 {
@@ -24,21 +25,23 @@ namespace DS
             return PhysicalChunksDict.TryGetValue((X, Y), out var result) ? result : -1;
         }
         public float GetHeightByCords(int X, int Y)
-        {
+        { 
             int chunkInd = ChunkWithCordsIndex(X / PhysicalChunk.SIZE, Y / PhysicalChunk.SIZE);
+            int inChunkX = UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(X);
+            int inChunkY = UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(Y);
             if (chunkInd == -1)
             {
                 return 0;
             }
             try
             {
-                return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
+                return (PhysicalChunks[chunkInd].chunk[inChunkX,inChunkY].height);
             }
             catch(IndexOutOfRangeException ex)
             {
-                return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
-                Console.WriteLine($"PhysicalChunks.Count() - 1 = {PhysicalChunks.Count() - 1} | chunkdInd = {chunkInd}");
-                //Console.WriteLine($"chunk.Length - 1 = {PhysicalChunks[chunkInd].chunk.Length} | (X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE = {(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE});
+                Debug.WriteLine($"PhysicalChunks.Count() - 1 = {PhysicalChunks.Count() - 1} | chunkdInd = {chunkInd}");
+                Debug.WriteLine($"chunk.Length - 1 = {PhysicalChunks[chunkInd].chunk.Length} | (X) % PhysicalChunk.SIZE = {inChunkX}, (Y) % PhysicalChunk.SIZE = {inChunkY}");
+                throw new Exception("Ті лох", ex);
             }
         }
         public void findRenderedPhysicalChunks()
