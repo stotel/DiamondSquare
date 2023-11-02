@@ -30,7 +30,16 @@ namespace DS
             {
                 return 0;
             }
-            return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
+            try
+            {
+                return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                return (PhysicalChunks[chunkInd].chunk[(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE].height);
+                Console.WriteLine($"PhysicalChunks.Count() - 1 = {PhysicalChunks.Count() - 1} | chunkdInd = {chunkInd}");
+                //Console.WriteLine($"chunk.Length - 1 = {PhysicalChunks[chunkInd].chunk.Length} | (X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE = {(X) % PhysicalChunk.SIZE, (Y) % PhysicalChunk.SIZE});
+            }
         }
         public void findRenderedPhysicalChunks()
         {

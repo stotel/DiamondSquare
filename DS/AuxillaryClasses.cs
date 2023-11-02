@@ -63,7 +63,7 @@ namespace DS
                     float pointHeight = chunk[k, j].height;
                     if (pointHeight != 0)
                     {
-                        if (pointHeight < 0.3f)
+                        if (pointHeight < 0.0f)
                         {
                             color = (byte)(Math.Pow(pointHeight, 1) * 255 + 100);
                             e.Surface.Canvas.DrawPoint
