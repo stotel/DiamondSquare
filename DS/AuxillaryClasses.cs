@@ -28,17 +28,19 @@ namespace DS
         public const int SIZE = 16;
         public HeightNode[,] chunk  = new HeightNode[SIZE, SIZE];
         public bool isRendered = true;
+        public bool isPotentForGeneration = true;
 
-        public PhysicalChunk(int PosX_, int PosY_)
+        public PhysicalChunk(int PosX_, int PosY_,bool isPotentForGeneration_ = true)
         {
             posX = PosX_;
             posY = PosY_;
+            isPotentForGeneration = isPotentForGeneration_;
         }
         
         public void checkIfRendered()
         {
             isRendered = true;
-            for (int i = 0;i<SIZE; i++)
+            for (int i = 1;i<SIZE; i++)
             {
                 for(int j = 0; j < SIZE; j++)
                 {
@@ -56,9 +58,9 @@ namespace DS
         public void DrawPhysycalChunk(object sender, SKPaintGLSurfaceEventArgs e, int ShiftX, int ShiftY)
         {
             byte color;
-            for (int j = 0; j < PhysicalChunk.SIZE; j++)
+            for (int j = 0; j < SIZE; j++)
             {
-                for (int k = 0; k < PhysicalChunk.SIZE; k++)
+                for (int k = 0; k < SIZE; k++)
                 {
                     float pointHeight = chunk[k, j].height;
                     if (pointHeight != 0)
@@ -67,14 +69,14 @@ namespace DS
                         {
                             color = (byte)(Math.Pow(pointHeight, 1) * 255 + 100);
                             e.Surface.Canvas.DrawPoint
-                            (new SKPoint(posX * PhysicalChunk.SIZE + k + ShiftX, posY * PhysicalChunk.SIZE + j + ShiftY),
+                            (new SKPoint(posX * SIZE + k + ShiftX, posY * SIZE + j + ShiftY),
                             new SKColor(0, 0, color));
                         }
                         else
                         {
-                            color = (byte)(Math.Pow(pointHeight, 1) * 255 + 50);
+                            color = (byte)(Math.Pow(pointHeight, 1) * 255/* + 50*/);
                             e.Surface.Canvas.DrawPoint
-                            (new SKPoint(posX * PhysicalChunk.SIZE + k + ShiftX, posY * PhysicalChunk.SIZE + j + ShiftY),
+                            (new SKPoint(posX * SIZE + k + ShiftX, posY * SIZE + j + ShiftY),
                             new SKColor(color, color, color));
                         }
                     }
@@ -92,10 +94,14 @@ namespace DS
             {
                 paint = new SKPaint { Color = new SKColor(0, 155, 0) };
             }
-            e.Surface.Canvas.DrawRect(posX * PhysicalChunk.SIZE + ShiftX, posY * PhysicalChunk.SIZE + ShiftY, 1, PhysicalChunk.SIZE, paint);
-            e.Surface.Canvas.DrawRect(posX * PhysicalChunk.SIZE + ShiftX, posY * PhysicalChunk.SIZE + PhysicalChunk.SIZE + ShiftY, PhysicalChunk.SIZE, 1, paint);
-            e.Surface.Canvas.DrawRect(posX * PhysicalChunk.SIZE + ShiftX, posY * PhysicalChunk.SIZE + ShiftY, PhysicalChunk.SIZE, 1, paint);
-            e.Surface.Canvas.DrawRect(posX * PhysicalChunk.SIZE + PhysicalChunk.SIZE + ShiftX, posY * PhysicalChunk.SIZE + ShiftY, 1, PhysicalChunk.SIZE, paint);
+            if(isPotentForGeneration)
+            {
+                paint.Color = paint.Color.WithRed(255);
+            }
+            e.Surface.Canvas.DrawRect(posX * SIZE + ShiftX, posY * SIZE + ShiftY, 1, SIZE, paint);
+            e.Surface.Canvas.DrawRect(posX * SIZE + ShiftX, posY * SIZE + SIZE + ShiftY, SIZE, 1, paint);
+            e.Surface.Canvas.DrawRect(posX * SIZE + ShiftX, posY * SIZE + ShiftY, SIZE, 1, paint);
+            e.Surface.Canvas.DrawRect(posX * SIZE + SIZE + ShiftX, posY * SIZE + ShiftY, 1, SIZE, paint);
         }
     }
 }

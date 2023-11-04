@@ -61,7 +61,7 @@ namespace DS
                     return height;
                 }
 				height = (float)random.NextDouble() * chunkSizeParam / maxSizeParam;
-                return height;
+                return Math.Min(Math.Max(height, 0.01f), 0.99f);
             }
 			else
 			{
@@ -147,22 +147,24 @@ namespace DS
 			{
 				for (int x = 1; x < numberOfSteps; x += 2)
 				{
-
-					float Point1Z = heightFromBlockPos(w, x - 1, y - 1, step);
-					float Point2Z = heightFromBlockPos(w, x + 1, y + 1, step);
-					float Point3Z = heightFromBlockPos(w, x - 1, y + 1, step);
-					float Point4Z = heightFromBlockPos(w, x + 1, y - 1, step);
-					float FinalPointZ;
-					if (w.GetHeightByCords(posX + (x) * step, posY + (y) * step) == 0)
+					if (heightFromBlockPos(w, x, y, step) == 0)
 					{
-						FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + addRandom(step) / 2);
+						float Point1Z = heightFromBlockPos(w, x - 1, y - 1, step);
+						float Point2Z = heightFromBlockPos(w, x + 1, y + 1, step);
+						float Point3Z = heightFromBlockPos(w, x - 1, y + 1, step);
+						float Point4Z = heightFromBlockPos(w, x + 1, y - 1, step);
+						float FinalPointZ;
+						if (w.GetHeightByCords(posX + (x) * step, posY + (y) * step) == 0)
+						{
+							FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z) / 4) + addRandom(step) / 2);
+						}
+						else
+						{
+							FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + heightFromBlockPos(w, x, y, step) * (numberOfSteps - step)) / (numberOfSteps - step + 4)) + addRandom(step) / 2);
+						}
+						Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
+						TransferFromLogicalChunkToWorld(w, x * step, y * step);
 					}
-					else
-					{
-						FinalPointZ = (float)(((Point1Z + Point2Z + Point3Z + Point4Z + heightFromBlockPos(w, x, y, step) * (numberOfSteps - step)) / (numberOfSteps - step + 4)) + addRandom(step) / 2);
-					}
-					Chunk[x * step, y * step] = new HeightNode(Math.Min(Math.Max(FinalPointZ, 0.01f), 0.99f));
-					TransferFromLogicalChunkToWorld(w, x * step, y * step);
 				}
 			}
 		}
@@ -196,13 +198,15 @@ namespace DS
             int[] inChunkCords = worldCordsToInChunkCords(UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(posX + x), UtilityFunctions.LoopInChunkCordsToTheCHUNKSIZERange(posY + y));
             int[] chunkCords = worldCordsToChunkCords(posX + x, posY + y);
             int posInChunksList = w.ChunkWithCordsIndex(chunkCords[0], chunkCords[1]);
+			bool isInLastRowOrColumn = (x == CHUNKSIZE || y == CHUNKSIZE);
             if (posInChunksList != -1)
 			{
                 w.PhysicalChunks[posInChunksList].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
+				w.PhysicalChunks[posInChunksList].isPotentForGeneration = isInLastRowOrColumn;
             }
 			else
 			{
-                w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1]));
+                w.PhysicalChunks.Add(new PhysicalChunk(chunkCords[0], chunkCords[1],isInLastRowOrColumn));
 				w.PhysicalChunksDict.Add((chunkCords[0], chunkCords[1]), w.PhysicalChunks.Count() - 1);
                 w.PhysicalChunks[w.PhysicalChunks.Count() - 1].chunk[inChunkCords[0], inChunkCords[1]] = Chunk[x, y];
             }
@@ -213,7 +217,7 @@ namespace DS
         }
         private int[] worldCordsToInChunkCords(int x, int y)
 		{
-			return (new int[] { (x) % PhysicalChunk.SIZE, (y) % PhysicalChunk.SIZE });
+			return (new int[] { Math.Abs((x)) % PhysicalChunk.SIZE, Math.Abs((y)) % PhysicalChunk.SIZE });
 		}
 	}
 }

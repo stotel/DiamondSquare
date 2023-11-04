@@ -13,6 +13,8 @@ namespace DS
 {
     public class World
     {
+        public static int WorldStaticRandomInt = 100;
+        private static Random random = new Random(WorldStaticRandomInt);
         public List<LogicalChunk> LogicalChunks = new List<LogicalChunk>();
         public List<PhysicalChunk> PhysicalChunks = new List<PhysicalChunk>();
         public Dictionary<(int, int), int> PhysicalChunksDict = new Dictionary<(int, int), int>();
@@ -70,7 +72,6 @@ namespace DS
         }
         public void visualiseWorld(object sender, SKPaintGLSurfaceEventArgs e, int ShiftX, int ShiftY)
         {
-            byte color;
             for (int i = 0; i < PhysicalChunks.Count; i++)
             {
                 PhysicalChunks[i].DrawPhysycalChunk(sender, e, ShiftX, ShiftY);
@@ -90,12 +91,15 @@ namespace DS
             }
             foreach(PhysicalChunk i in CurrentUnrenderedPhysicalChunks)
             {
-                int powOf2LogChunkSize = random.Next(5,7);
-                int ChSideSize = (int)Math.Pow(2, powOf2LogChunkSize);
-                LogicalChunk chunk = new LogicalChunk((i.posX+1)*PhysicalChunk.SIZE-ChSideSize, (i.posY+1)*PhysicalChunk.SIZE - ChSideSize, powOf2LogChunkSize, 2f, random.Next(2147483647));
-                chunk.InitChunk(this);
-                chunk.generateLandscape(this);
-                LogicalChunks.Add(chunk);
+                if (i.isPotentForGeneration)
+                {
+                    int powOf2LogChunkSize = random.Next(5, 8);
+                    int SpawnRandomDist = (int)Math.Pow(2, powOf2LogChunkSize)/16 - 1;
+                    LogicalChunk chunk = new LogicalChunk(((i.posX) * PhysicalChunk.SIZE) - (random.Next(SpawnRandomDist) * PhysicalChunk.SIZE), ((i.posY) * PhysicalChunk.SIZE) - (random.Next(SpawnRandomDist) * PhysicalChunk.SIZE), powOf2LogChunkSize, 4f, random.Next(2147483647));
+                    chunk.InitChunk(this);
+                    chunk.generateLandscape(this);
+                    LogicalChunks.Add(chunk);
+                }
             }
             Debug.WriteLine(LogicalChunks.Count);
         }

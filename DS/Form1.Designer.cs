@@ -36,9 +36,9 @@
             // skglControl1
             // 
             this.skglControl1.BackColor = System.Drawing.Color.Black;
-            this.skglControl1.Location = new System.Drawing.Point(12, 12);
+            this.skglControl1.Location = new System.Drawing.Point(12, 10);
             this.skglControl1.Name = "skglControl1";
-            this.skglControl1.Size = new System.Drawing.Size(1025, 1025);
+            this.skglControl1.Size = new System.Drawing.Size(720, 720);
             this.skglControl1.TabIndex = 0;
             this.skglControl1.VSync = false;
             this.skglControl1.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.display);
@@ -46,7 +46,7 @@
             // 
             // generate
             // 
-            this.generate.Location = new System.Drawing.Point(1042, 12);
+            this.generate.Location = new System.Drawing.Point(738, 10);
             this.generate.Name = "generate";
             this.generate.Size = new System.Drawing.Size(70, 67);
             this.generate.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // expand
             // 
-            this.expand.Location = new System.Drawing.Point(1042, 85);
+            this.expand.Location = new System.Drawing.Point(738, 83);
             this.expand.Name = "expand";
             this.expand.Size = new System.Drawing.Size(70, 23);
             this.expand.TabIndex = 2;
@@ -68,7 +68,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1124, 845);
+            this.ClientSize = new System.Drawing.Size(820, 742);
             this.Controls.Add(this.expand);
             this.Controls.Add(this.generate);
             this.Controls.Add(this.skglControl1);

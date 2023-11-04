@@ -40,8 +40,8 @@ namespace DS
         {
             e.Surface.Canvas.Clear();
             w.visualiseWorld(sender,e,Moover.PosX,Moover.PosY);
-            w.visualizePhysicalChunks(sender, e, Moover.PosX, Moover.PosY);
-            w.visualizeLogicalChunks(sender, e, Moover.PosX, Moover.PosY);
+            //w.visualizePhysicalChunks(sender, e, Moover.PosX, Moover.PosY);
+            //w.visualizeLogicalChunks(sender, e, Moover.PosX, Moover.PosY);
         }
         private void ChunkTest()
         {
@@ -76,10 +76,14 @@ namespace DS
                     w.LogicalChunks.Add(chunk);
                 }
             }*/
-            LogicalChunk chunk = new LogicalChunk(500 - 128, 500 - 128, 8, 4f, random.Next(2147483647));
+            LogicalChunk chunk = new LogicalChunk(512 - 128, 512 - 128, 8, 4f, random.Next(2147483647));
             chunk.InitChunk(w);
             chunk.generateLandscape(w);
             w.LogicalChunks.Add(chunk);
+            /*LogicalChunk chunk1 = new LogicalChunk(512, 512-128, 8, 4f, random.Next(2147483647));
+            chunk1.InitChunk(w);
+            chunk1.generateLandscape(w);
+            w.LogicalChunks.Add(chunk1);*/
         }
         private void skglControl1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -97,6 +101,7 @@ namespace DS
         private void expandClick(object sender, EventArgs e)
         {
             w.expandWorldInAllDirections(random);
+            w.findRenderedPhysicalChunks();
             skglControl1.Invalidate();
         }
     }
